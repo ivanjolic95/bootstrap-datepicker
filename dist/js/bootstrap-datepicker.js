@@ -1,9 +1,3 @@
-/*!
- * Datepicker for Bootstrap v1.8.0 (https://github.com/uxsolutions/bootstrap-datepicker)
- *
- * Licensed under the Apache License v2.0 (http://www.apache.org/licenses/LICENSE-2.0)
- */
-
 (function(factory){
     if (typeof define === 'function' && define.amd) {
         define(['jquery'], factory);
@@ -405,7 +399,7 @@
 					click: $.proxy(this.navArrowsClick, this)
 				}],
 				[this.picker, '.day:not(.disabled)', {
-					click: $.proxy(this.dayCellClick, this)
+					'click touchstart': $.proxy(this.dayCellClick, this)
 				}],
 				[$(window), {
 					resize: $.proxy(this.place, this)
@@ -1151,12 +1145,12 @@
 					factor *= 10;
 					/* falls through */
 				case 1:
-					prevIsDisabled = Math.floor(year / factor) * factor < startYear;
+					prevIsDisabled = Math.floor(year / factor) * factor <= startYear;
 					nextIsDisabled = Math.floor(year / factor) * factor + factor > endYear;
 					break;
 				case 0:
-					prevIsDisabled = year <= startYear && month < startMonth;
-					nextIsDisabled = year >= endYear && month > endMonth;
+					prevIsDisabled = year <= startYear && month <= startMonth;
+					nextIsDisabled = year >= endYear && month >= endMonth;
 					break;
 			}
 
@@ -1224,6 +1218,9 @@
 		},
 
 		dayCellClick: function(e){
+			if (e.type === 'touchstart')
+				e.stopPropagation();
+
 			var $target = $(e.currentTarget);
 			var timestamp = $target.data('date');
 			var date = new Date(timestamp);

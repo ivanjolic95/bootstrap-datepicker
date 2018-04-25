@@ -418,7 +418,7 @@
 					click: $.proxy(this.navArrowsClick, this)
 				}],
 				[this.picker, '.day:not(.disabled)', {
-					click: $.proxy(this.dayCellClick, this)
+					'click touchstart': $.proxy(this.dayCellClick, this)
 				}],
 				[$(window), {
 					resize: $.proxy(this.place, this)
@@ -1237,6 +1237,9 @@
 		},
 
 		dayCellClick: function(e){
+			if (e.type === 'touchstart')
+				e.stopPropagation();
+
 			var $target = $(e.currentTarget);
 			var timestamp = $target.data('date');
 			var date = new Date(timestamp);
