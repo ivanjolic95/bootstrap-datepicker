@@ -505,3 +505,29 @@ test('Clicking inside content of date with custom beforeShowDay content works', 
     // ensure event has been triggered
     equal(triggered, 1);
 });
+
+test('afterRender event is triggered when the picker is rendered', function(){
+  var triggered = 0;
+
+  this.input.on('afterRender', function(){
+    triggered++;
+  });
+
+  this.dp.fill();
+
+  equal(triggered, 1);
+});
+
+test('afterRender event is triggered when the month is changed', function(){
+  var triggered = 0;
+
+  this.input.on('afterRender', function(){
+    triggered++;
+  });
+
+  var picker = this.dp.picker;
+
+  picker.find('.next').click();
+
+  ok(triggered > 0);
+});
