@@ -399,7 +399,25 @@
 					click: $.proxy(this.navArrowsClick, this)
 				}],
 				[this.picker, '.day:not(.disabled)', {
-					'click touchstart': $.proxy(this.dayCellClick, this)
+					'click': $.proxy(this.dayCellClick, this)
+				}],
+				[this.picker, '.day:not(.disabled)', {
+					'touchend': $.proxy(function(e){
+						if (this.isScrolling) return;
+						e.preventDefault();
+						e.stopPropagation();
+						this.dayCellClick(e);
+					}, this)
+				}],
+				[this.picker, '.day:not(.disabled)', {
+					'touchstart': $.proxy(function(e){
+						this.isScrolling = false;
+					}, this)
+				}],
+				[this.picker, '.day:not(.disabled)', {
+					'touchmove': $.proxy(function(e){
+						this.isScrolling = true;
+					}, this)
 				}],
 				[$(window), {
 					resize: $.proxy(this.place, this)
@@ -1218,9 +1236,6 @@
 		},
 
 		dayCellClick: function(e){
-			if (e.type === 'touchstart')
-				e.stopPropagation();
-
 			var $target = $(e.currentTarget);
 			var timestamp = $target.data('date');
 			var date = new Date(timestamp);
